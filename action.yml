@@ -11,6 +11,12 @@ inputs:
     description: 'GitHub token for client authentication'
     required: true
 
+outputs:
+  trace-id:
+    description:
+      'The OpenTelemetry trace ID generated for the workflow (empty string if
+      no trace was created)'
+
 runs:
   using: node24
   main: dist/index.js

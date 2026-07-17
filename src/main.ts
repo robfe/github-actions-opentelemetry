@@ -31,6 +31,7 @@ export async function run(): Promise<void> {
     const results = await fetchWorkflowResults(octokit, workflowContext)
     await createMetrics(results)
     const traceId = await createTrace(results)
+    core.setOutput('trace-id', traceId)
     await writeSummaryIfNeeded(traceId)
   } catch (error) {
     if (error instanceof Error) core.error(error)
