@@ -37,7 +37,7 @@ export const createWorkflowJobSpan = (
 
   const spanWithWaiting = createSpan(
     ctx,
-    `${job.name} with time of waiting runner`,
+    `${job.name}`,
     job.created_at,
     job.completed_at,
     job.conclusion,
@@ -45,7 +45,7 @@ export const createWorkflowJobSpan = (
   )
   const ctxWithWaiting = opentelemetry.trace.setSpan(ctx, spanWithWaiting)
 
-  const waitingSpanName = `waiting runner for ${job.name}`
+  const waitingSpanName = `Waiting for runner`
   const jobQueuedDuration = calcDiffSec(job.created_at, job.started_at)
   if (jobQueuedDuration >= 0) {
     createSpan(
@@ -64,7 +64,7 @@ export const createWorkflowJobSpan = (
 
   const jobSpan = createSpan(
     ctxWithWaiting,
-    job.name,
+    "steps",
     job.started_at,
     job.completed_at,
     job.conclusion,
