@@ -72281,9 +72281,9 @@ const createWorkflowJobSpan = (ctx, job) => {
     if (!job.completed_at) {
         throw new Error(`Job completed_at is required for span creation: ${job.name} (id: ${job.id})`);
     }
-    const spanWithWaiting = createSpan(ctx, `${job.name} with time of waiting runner`, job.created_at, job.completed_at, job.conclusion, { ...buildWorkflowJobAttributes(job) });
+    const spanWithWaiting = createSpan(ctx, `${job.name}`, job.created_at, job.completed_at, job.conclusion, { ...buildWorkflowJobAttributes(job) });
     const ctxWithWaiting = src.trace.setSpan(ctx, spanWithWaiting);
-    const waitingSpanName = `waiting runner for ${job.name}`;
+    const waitingSpanName = `Waiting for runner`;
     const jobQueuedDuration = calcDiffSec(job.created_at, job.started_at);
     if (jobQueuedDuration >= 0) {
         createSpan(ctxWithWaiting, waitingSpanName, job.created_at, job.started_at, 'success', // waiting runner is not a error.
@@ -72292,7 +72292,7 @@ const createWorkflowJobSpan = (ctx, job) => {
     else {
         core.notice(`${job.name}: Skip to create "${waitingSpanName}" span. This is a GitHub specification issue that occasionally occurs, so it can't be recover.`);
     }
-    const jobSpan = createSpan(ctxWithWaiting, job.name, job.started_at, job.completed_at, job.conclusion, { ...buildWorkflowJobAttributes(job) });
+    const jobSpan = createSpan(ctxWithWaiting, 'steps', job.started_at, job.completed_at, job.conclusion, { ...buildWorkflowJobAttributes(job) });
     return src.trace.setSpan(ctxWithWaiting, jobSpan);
 };
 const createWorkflowRunStepSpan = (ctx, job) => {
@@ -72489,6 +72489,7 @@ async function run() {
         const results = await fetchWorkflowResults(octokit, workflowContext);
         await createMetrics(results);
         const traceId = await createTrace(results);
+        core.setOutput('trace-id', traceId);
         await writeSummaryIfNeeded(traceId);
     }
     catch (error) {

@@ -64,7 +64,7 @@ export const createWorkflowJobSpan = (
 
   const jobSpan = createSpan(
     ctxWithWaiting,
-    "steps",
+    'steps',
     job.started_at,
     job.completed_at,
     job.conclusion,

@@ -14,8 +14,8 @@ inputs:
 outputs:
   trace-id:
     description:
-      'The OpenTelemetry trace ID generated for the workflow (empty string if
-      no trace was created)'
+      'The OpenTelemetry trace ID generated for the workflow (empty string if no
+      trace was created)'
 
 runs:
   using: node24
